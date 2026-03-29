@@ -35,7 +35,7 @@ export async function middleware(request: NextRequest) {
   const isProtectedRoute = request.nextUrl.pathname.startsWith('/dashboard');
   const isRootRoute = request.nextUrl.pathname === '/';
 
-  if (!user && (isProtectedRoute || isRootRoute)) {
+  if (!user && isProtectedRoute) {
     const url = request.nextUrl.clone();
     url.pathname = '/auth/login';
     return NextResponse.redirect(url);

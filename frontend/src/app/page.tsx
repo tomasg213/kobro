@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
 import { Zap, Shield, Users, ArrowRight, CheckCircle, MessageSquare } from "lucide-react";
 
 export default function HomePage() {
+  const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -16,9 +17,12 @@ export default function HomePage() {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
       setIsAuthenticated(!!user);
+      if (user) {
+        router.push("/dashboard");
+      }
     };
     checkAuth();
-  }, []);
+  }, [router]);
 
   if (!mounted) {
     return null;
