@@ -30,16 +30,16 @@ export function BusinessSelector() {
   if (isLoading) {
     return (
       <div className="flex items-center gap-2 px-3 py-2">
-        <div className="h-4 w-4 animate-pulse rounded bg-primary-foreground/20" />
-        <div className="h-4 w-24 animate-pulse rounded bg-primary-foreground/20" />
+        <div className="h-4 w-4 animate-pulse rounded bg-white/10" />
+        <div className="h-4 w-24 animate-pulse rounded bg-white/10" />
       </div>
     );
   }
 
   if (!isConfigured) {
     return (
-      <div className="mx-3 rounded-lg bg-primary-foreground/10 px-3 py-2">
-        <p className="text-xs text-primary-foreground/60">
+      <div className="mx-3 rounded-lg bg-white/5 px-3 py-2">
+        <p className="text-xs text-white/40">
           Inicia sesión para continuar
         </p>
       </div>
@@ -47,9 +47,9 @@ export function BusinessSelector() {
   }
 
   return (
-    <div className="mx-3 rounded-lg bg-primary-foreground/10 px-3 py-2">
+    <div className="mx-3 rounded-lg bg-white/5 px-3 py-2">
       <div className="flex items-center gap-2">
-        <Building2 className="h-4 w-4 text-primary-foreground/60" />
+        <Building2 className="h-4 w-4 text-white/40" />
         
         {isEditing ? (
           <div className="flex flex-1 items-center gap-1">
@@ -58,7 +58,7 @@ export function BusinessSelector() {
               value={editValue}
               onChange={(e) => setEditValue(e.target.value)}
               placeholder="Nombre de tu negocio"
-              className="flex-1 bg-transparent text-sm text-primary-foreground outline-none placeholder:text-primary-foreground/40"
+              className="flex-1 bg-transparent text-sm text-white outline-none placeholder:text-white/30"
               autoFocus
               onKeyDown={(e) => {
                 if (e.key === 'Enter') handleSave();
@@ -67,13 +67,13 @@ export function BusinessSelector() {
             />
             <button
               onClick={handleSave}
-              className="rounded p-1 hover:bg-primary-foreground/10"
+              className="rounded p-1 hover:bg-white/10"
             >
               <Check className="h-3 w-3 text-green-400" />
             </button>
             <button
               onClick={handleCancel}
-              className="rounded p-1 hover:bg-primary-foreground/10"
+              className="rounded p-1 hover:bg-white/10"
             >
               <X className="h-3 w-3 text-red-400" />
             </button>
@@ -82,15 +82,15 @@ export function BusinessSelector() {
           <>
             <span className={cn(
               "flex-1 text-sm truncate",
-              businessName ? "text-primary-foreground" : "text-primary-foreground/40"
+              businessName ? "text-white" : "text-white/30"
             )}>
               {businessName || "Configura tu negocio"}
             </span>
             <button
               onClick={handleStartEdit}
-              className="rounded p-1 opacity-0 transition-opacity hover:bg-primary-foreground/10 group-hover:opacity-100"
+              className="rounded p-1 opacity-0 transition-opacity hover:bg-white/10 group-hover:opacity-100"
             >
-              <Edit2 className="h-3 w-3 text-primary-foreground/60" />
+              <Edit2 className="h-3 w-3 text-white/40" />
             </button>
           </>
         )}

@@ -34,7 +34,7 @@ export default function DashboardPage() {
         <Header title="Dashboard" subtitle="Cargando..." />
         <div className="p-6">
           <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#a8d5a8]" />
           </div>
         </div>
       </div>
@@ -84,12 +84,12 @@ export default function DashboardPage() {
         {/* Main Content Grid */}
         <div className="grid gap-6 lg:grid-cols-3">
           {/* Recent Transactions */}
-          <Card className="lg:col-span-2">
+          <Card className="lg:col-span-2" style={{ backgroundColor: '#0d261a', borderColor: 'rgba(255,255,255,0.1)' }}>
             <CardHeader className="flex flex-row items-center justify-between pb-3">
-              <CardTitle className="text-lg font-semibold">Últimas Transacciones</CardTitle>
+              <CardTitle className="text-lg font-semibold text-white">Últimas Transacciones</CardTitle>
               <Link 
                 href="/dashboard/transactions"
-                className="text-sm text-primary hover:underline flex items-center gap-1 font-medium"
+                className="text-sm text-[#a8d5a8] hover:underline flex items-center gap-1 font-medium"
               >
                 Ver todas <ArrowRight className="h-3 w-3" />
               </Link>
@@ -97,11 +97,11 @@ export default function DashboardPage() {
             <CardContent>
               {recentTransactions.length === 0 ? (
                 <div className="text-center py-8">
-                  <Receipt className="h-12 w-12 text-muted-foreground/30 mx-auto mb-3" />
-                  <p className="text-muted-foreground">No hay transacciones registradas</p>
+                  <Receipt className="h-12 w-12 text-white/20 mx-auto mb-3" />
+                  <p className="text-white/50">No hay transacciones registradas</p>
                   <Link 
                     href="/dashboard/transactions"
-                    className="text-sm text-primary hover:underline mt-2 inline-block"
+                    className="text-sm text-[#a8d5a8] hover:underline mt-2 inline-block"
                   >
                     Agregar primera transacción
                   </Link>
@@ -113,21 +113,21 @@ export default function DashboardPage() {
                     return (
                       <div 
                         key={transaction.id} 
-                        className="flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors"
+                        className="flex items-center justify-between p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
                       >
                         <div className="flex items-center gap-3">
-                          <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center">
-                            <Users className="h-5 w-5 text-primary" />
+                          <div className="h-10 w-10 rounded-full bg-[#a8d5a8]/20 flex items-center justify-center">
+                            <Users className="h-5 w-5 text-[#a8d5a8]" />
                           </div>
                           <div>
-                            <p className="font-medium text-sm">{client?.name || "Cliente"}</p>
-                            <p className="text-xs text-muted-foreground">
+                            <p className="font-medium text-sm text-white">{client?.name || "Cliente"}</p>
+                            <p className="text-xs text-white/40">
                               {formatDate(transaction.due_date)}
                             </p>
                           </div>
                         </div>
                         <div className="text-right">
-                          <p className="font-semibold">{formatCurrency(transaction.amount)}</p>
+                          <p className="font-semibold text-white">{formatCurrency(transaction.amount)}</p>
                           <Badge className={`text-xs ${getStatusColor(transaction.status)}`}>
                             {transaction.status === "pending" && "Pendiente"}
                             {transaction.status === "awaiting_approval" && "Por aprobar"}
@@ -144,34 +144,34 @@ export default function DashboardPage() {
           </Card>
 
           {/* Quick Actions */}
-          <Card>
+          <Card style={{ backgroundColor: '#0d261a', borderColor: 'rgba(255,255,255,0.1)' }}>
             <CardHeader className="pb-3">
-              <CardTitle className="text-lg font-semibold">Accesos Rápidos</CardTitle>
+              <CardTitle className="text-lg font-semibold text-white">Accesos Rápidos</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <Link 
                 href="/dashboard/clients"
-                className="flex items-center justify-between p-4 rounded-lg border hover:bg-gray-50 transition-colors group"
+                className="flex items-center justify-between p-4 rounded-lg border border-white/10 hover:bg-white/5 transition-colors group"
               >
                 <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-lg bg-primary/20 flex items-center justify-center">
-                    <Users className="h-5 w-5 text-primary" />
+                  <div className="h-10 w-10 rounded-lg bg-[#a8d5a8]/20 flex items-center justify-center">
+                    <Users className="h-5 w-5 text-[#a8d5a8]" />
                   </div>
-                  <span className="font-medium">Clientes</span>
+                  <span className="font-medium text-white">Clientes</span>
                 </div>
-                <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="h-4 w-4 text-white/40 group-hover:translate-x-1 transition-transform" />
               </Link>
               
               <Link 
                 href="/dashboard/transactions/pending"
-                className="flex items-center justify-between p-4 rounded-lg border hover:bg-gray-50 transition-colors group"
+                className="flex items-center justify-between p-4 rounded-lg border border-white/10 hover:bg-white/5 transition-colors group"
               >
                 <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-lg bg-warning/20 flex items-center justify-center">
-                    <AlertCircle className="h-5 w-5 text-warning" />
+                  <div className="h-10 w-10 rounded-lg bg-yellow-500/20 flex items-center justify-center">
+                    <AlertCircle className="h-5 w-5 text-yellow-400" />
                   </div>
                   <div>
-                    <span className="font-medium">Comprobantes</span>
+                    <span className="font-medium text-white">Comprobantes</span>
                     {transactionStats.awaiting_approval > 0 && (
                       <Badge variant="warning" className="ml-2 text-xs">
                         {transactionStats.awaiting_approval}
@@ -179,33 +179,33 @@ export default function DashboardPage() {
                     )}
                   </div>
                 </div>
-                <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="h-4 w-4 text-white/40 group-hover:translate-x-1 transition-transform" />
               </Link>
               
               <Link 
                 href="/dashboard/campaigns/new"
-                className="flex items-center justify-between p-4 rounded-lg border hover:bg-gray-50 transition-colors group"
+                className="flex items-center justify-between p-4 rounded-lg border border-white/10 hover:bg-white/5 transition-colors group"
               >
                 <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-lg bg-info/20 flex items-center justify-center">
-                    <Send className="h-5 w-5 text-info" />
+                  <div className="h-10 w-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                    <Send className="h-5 w-5 text-blue-400" />
                   </div>
-                  <span className="font-medium">Nueva Campaña</span>
+                  <span className="font-medium text-white">Nueva Campaña</span>
                 </div>
-                <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="h-4 w-4 text-white/40 group-hover:translate-x-1 transition-transform" />
               </Link>
 
               <Link 
                 href="/dashboard/settings/templates"
-                className="flex items-center justify-between p-4 rounded-lg border hover:bg-gray-50 transition-colors group"
+                className="flex items-center justify-between p-4 rounded-lg border border-white/10 hover:bg-white/5 transition-colors group"
               >
                 <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-lg bg-secondary flex items-center justify-center">
-                    <MessageSquare className="h-5 w-5 text-secondary-foreground" />
+                  <div className="h-10 w-10 rounded-lg bg-white/10 flex items-center justify-center">
+                    <MessageSquare className="h-5 w-5 text-white/70" />
                   </div>
-                  <span className="font-medium">Plantillas</span>
+                  <span className="font-medium text-white">Plantillas</span>
                 </div>
-                <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="h-4 w-4 text-white/40 group-hover:translate-x-1 transition-transform" />
               </Link>
             </CardContent>
           </Card>
@@ -213,12 +213,12 @@ export default function DashboardPage() {
 
         {/* Campaigns Overview */}
         {campaigns.length > 0 && (
-          <Card>
+          <Card style={{ backgroundColor: '#0d261a', borderColor: 'rgba(255,255,255,0.1)' }}>
             <CardHeader className="flex flex-row items-center justify-between pb-3">
-              <CardTitle className="text-lg font-semibold">Campañas Recientes</CardTitle>
+              <CardTitle className="text-lg font-semibold text-white">Campañas Recientes</CardTitle>
               <Link 
                 href="/dashboard/campaigns"
-                className="text-sm text-primary hover:underline flex items-center gap-1 font-medium"
+                className="text-sm text-[#a8d5a8] hover:underline flex items-center gap-1 font-medium"
               >
                 Ver todas <ArrowRight className="h-3 w-3" />
               </Link>
@@ -228,10 +228,10 @@ export default function DashboardPage() {
                 {campaigns.slice(0, 3).map((campaign) => (
                   <div 
                     key={campaign.id}
-                    className="p-4 rounded-lg bg-gray-50"
+                    className="p-4 rounded-lg bg-white/5"
                   >
                     <div className="flex items-center justify-between mb-2">
-                      <p className="font-medium text-sm">{campaign.name}</p>
+                      <p className="font-medium text-sm text-white">{campaign.name}</p>
                       <Badge 
                         variant={campaign.status === 'sent' ? 'default' : 'secondary'}
                         className="text-xs"
@@ -241,11 +241,11 @@ export default function DashboardPage() {
                         {campaign.status === 'scheduled' && 'Programada'}
                       </Badge>
                     </div>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-white/50">
                       {campaign.sent_count} mensajes enviados
                     </p>
                     {campaign.scheduled_at && (
-                      <p className="text-xs text-muted-foreground mt-1">
+                      <p className="text-xs text-white/40 mt-1">
                         {formatDate(campaign.scheduled_at)}
                       </p>
                     )}
