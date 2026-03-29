@@ -34,13 +34,17 @@ export default function LoginPage() {
       });
 
       if (error) {
-        setError(error.message);
+        if (error.message.includes("fetch") || error.message.includes("network")) {
+          setError("No se pudo conectar al servidor. Verificá tu conexión a internet.");
+        } else {
+          setError(error.message);
+        }
       } else {
         router.push("/dashboard");
         router.refresh();
       }
     } catch {
-      setError("Ocurrió un error inesperado");
+      setError("Ocurrió un error inesperado. Verificá que Supabase esté configurado.");
     } finally {
       setLoading(false);
     }
