@@ -5,6 +5,9 @@ import { BusinessProvider } from "@/contexts/BusinessContext";
 export const metadata: Metadata = {
   title: "Kobro - WhatsApp B2B Platform",
   description: "Plataforma de mensajería automatizada de WhatsApp para empresas",
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({
