@@ -8,24 +8,24 @@
     --foreground: 142 30% 15%;
     --card: 0 0% 100%;
     --card-foreground: 142 30% 15%;
-    --primary: 142 50% 65%;
-    --primary-foreground: 142 50% 10%;
-    --secondary: 142 40% 92%;
+    --primary: 142 45% 40%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 142 30% 95%;
     --secondary-foreground: 142 30% 15%;
-    --muted: 142 30% 94%;
-    --muted-foreground: 142 15% 45%;
-    --accent: 142 50% 95%;
-    --accent-foreground: 142 45% 20%;
+    --muted: 142 30% 96%;
+    --muted-foreground: 142 20% 45%;
+    --accent: 142 45% 95%;
+    --accent-foreground: 142 45% 30%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 142 30% 85%;
-    --input: 142 30% 85%;
-    --ring: 142 50% 65%;
+    --border: 142 30% 88%;
+    --input: 142 30% 88%;
+    --ring: 142 45% 40%;
     --radius: 0.5rem;
     
-    --success: 142 60% 50%;
+    --success: 142 55% 45%;
     --warning: 38 92% 50%;
-    --info: 200 98% 46%;
+    --info: 200 85% 45%;
   }
 }
 
@@ -38,7 +38,7 @@
   }
   
   ::selection {
-    @apply bg-primary/30;
+    @apply bg-primary/20;
   }
 }
 

@@ -30,16 +30,16 @@ export function BusinessSelector() {
   if (isLoading) {
     return (
       <div className="flex items-center gap-2 px-3 py-2">
-        <div className="h-4 w-4 animate-pulse rounded bg-white/10" />
-        <div className="h-4 w-24 animate-pulse rounded bg-white/10" />
+        <div className="h-4 w-4 animate-pulse rounded bg-white/20" />
+        <div className="h-4 w-24 animate-pulse rounded bg-white/20" />
       </div>
     );
   }
 
   if (!isConfigured) {
     return (
-      <div className="mx-3 rounded-lg bg-white/5 px-3 py-2">
-        <p className="text-xs text-white/40">
+      <div className="mx-3 rounded-lg bg-white/10 px-3 py-2">
+        <p className="text-xs text-white/60">
           Inicia sesión para continuar
         </p>
       </div>
@@ -47,9 +47,9 @@ export function BusinessSelector() {
   }
 
   return (
-    <div className="mx-3 rounded-lg bg-white/5 px-3 py-2">
+    <div className="mx-3 rounded-lg bg-white/10 px-3 py-2">
       <div className="flex items-center gap-2">
-        <Building2 className="h-4 w-4 text-white/40" />
+        <Building2 className="h-4 w-4 text-white/60" />
         
         {isEditing ? (
           <div className="flex flex-1 items-center gap-1">
@@ -58,7 +58,7 @@ export function BusinessSelector() {
               value={editValue}
               onChange={(e) => setEditValue(e.target.value)}
               placeholder="Nombre de tu negocio"
-              className="flex-1 bg-transparent text-sm text-white outline-none placeholder:text-white/30"
+              className="flex-1 bg-white/10 text-sm text-white outline-none placeholder:text-white/40 rounded px-2 py-1"
               autoFocus
               onKeyDown={(e) => {
                 if (e.key === 'Enter') handleSave();
@@ -82,7 +82,7 @@ export function BusinessSelector() {
           <>
             <span className={cn(
               "flex-1 text-sm truncate",
-              businessName ? "text-white" : "text-white/30"
+              businessName ? "text-white" : "text-white/40"
             )}>
               {businessName || "Configura tu negocio"}
             </span>
@@ -90,7 +90,7 @@ export function BusinessSelector() {
               onClick={handleStartEdit}
               className="rounded p-1 opacity-0 transition-opacity hover:bg-white/10 group-hover:opacity-100"
             >
-              <Edit2 className="h-3 w-3 text-white/40" />
+              <Edit2 className="h-3 w-3 text-white/60" />
             </button>
           </>
         )}

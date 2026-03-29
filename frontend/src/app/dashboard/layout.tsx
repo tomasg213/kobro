@@ -27,10 +27,10 @@ export default function DashboardLayout({
 
   if (!isClient || loading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-[#1a3a2a]">
+      <div className="flex h-screen items-center justify-center bg-gray-100">
         <div className="flex flex-col items-center gap-4">
-          <Loader2 className="h-8 w-8 animate-spin text-[#a8d5a8]" />
-          <p className="text-sm text-white/60">Cargando...</p>
+          <Loader2 className="h-8 w-8 animate-spin text-[#4a7c59]" />
+          <p className="text-sm text-gray-500">Cargando...</p>
         </div>
       </div>
     );
@@ -43,7 +43,7 @@ export default function DashboardLayout({
   return (
     <div className="flex h-screen">
       <Sidebar />
-      <main className="flex-1 overflow-auto bg-[#1a3a2a]">
+      <main className="flex-1 overflow-auto bg-gray-100">
         {children}
       </main>
     </div>
