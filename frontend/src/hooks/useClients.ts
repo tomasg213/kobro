@@ -1,73 +1,9 @@
-import { useState, useEffect } from 'react';
-import { Client } from '@/types/database';
+'use client';
 
-const mockClients: Client[] = [
-  {
-    id: "1",
-    business_id: "b1",
-    name: "Juan Pérez",
-    phone: "+5491112345678",
-    email: "juan.perez@email.com",
-    debt_amount: 15000,
-    notes: "Cliente VIP, siempre paga a tiempo",
-    tags: ["VIP", "Cliente Frecuente"],
-    is_active: true,
-    created_at: "2024-01-15T10:00:00Z",
-    updated_at: "2024-03-20T14:30:00Z",
-  },
-  {
-    id: "2",
-    business_id: "b1",
-    name: "María García",
-    phone: "+5491198765432",
-    email: "maria.garcia@email.com",
-    debt_amount: 8500,
-    notes: "Nuevo cliente",
-    tags: ["Nuevo"],
-    is_active: true,
-    created_at: "2024-02-01T09:00:00Z",
-    updated_at: "2024-02-01T09:00:00Z",
-  },
-  {
-    id: "3",
-    business_id: "b1",
-    name: "Carlos Rodríguez",
-    phone: "+5491155566677",
-    email: "carlos.rodriguez@email.com",
-    debt_amount: 25000,
-    notes: "Pago pendiente desde hace 30 días",
-    tags: ["Moroso"],
-    is_active: true,
-    created_at: "2023-11-10T11:00:00Z",
-    updated_at: "2024-03-15T16:45:00Z",
-  },
-  {
-    id: "4",
-    business_id: "b1",
-    name: "Ana Martínez",
-    phone: "+5491133344455",
-    email: "ana.martinez@email.com",
-    debt_amount: 0,
-    notes: "Sin deudas actuales",
-    tags: ["Bueno"],
-    is_active: true,
-    created_at: "2023-06-20T08:30:00Z",
-    updated_at: "2024-03-25T10:00:00Z",
-  },
-  {
-    id: "5",
-    business_id: "b1",
-    name: "Pedro Sánchez",
-    phone: "+5491177788899",
-    email: "pedro.sanchez@email.com",
-    debt_amount: 5000,
-    notes: "Pago próximo vencimiento",
-    tags: ["Regular"],
-    is_active: false,
-    created_at: "2023-09-05T14:00:00Z",
-    updated_at: "2024-01-10T09:30:00Z",
-  },
-];
+import { useState, useEffect, useCallback } from 'react';
+import { Client } from '@/types/database';
+import { apiClient, ApiError } from '@/lib/api/client';
+import { useBusiness } from '@/contexts/BusinessContext';
 
 export type ClientFormData = {
   name: string;
@@ -77,58 +13,62 @@ export type ClientFormData = {
   notes: string | null;
   tags: string[];
   is_active: boolean;
-  business_id?: string;
 };
 
 export function useClients() {
+  const { businessId } = useBusiness();
   const [clients, setClients] = useState<Client[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchClients = async () => {
-      setLoading(true);
-      try {
-        await new Promise(resolve => setTimeout(resolve, 500));
-        setClients(mockClients);
-        setError(null);
-      } catch (err) {
-        setError('Error al cargar clientes');
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchClients = useCallback(async () => {
+    if (!businessId) {
+      setClients([]);
+      setLoading(false);
+      return;
+    }
 
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await apiClient.get<Client[]>('/clients', {
+        params: { business_id: businessId },
+      });
+      setClients(response || []);
+    } catch (err) {
+      if (err instanceof ApiError) {
+        setError(err.message);
+      } else {
+        setError('Error al cargar clientes');
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, [businessId]);
+
+  useEffect(() => {
     fetchClients();
-  }, []);
+  }, [fetchClients]);
 
   const addClient = async (clientData: ClientFormData) => {
-    const newClient: Client = {
-      id: crypto.randomUUID(),
-      business_id: clientData.business_id || "b1",
-      name: clientData.name,
-      phone: clientData.phone,
-      email: clientData.email,
-      debt_amount: clientData.debt_amount,
-      notes: clientData.notes,
-      tags: clientData.tags,
-      is_active: clientData.is_active,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    };
-    setClients(prev => [newClient, ...prev]);
-    return newClient;
+    if (!businessId) throw new Error('No business selected');
+
+    const response = await apiClient.post<Client>('/clients', {
+      ...clientData,
+      business_id: businessId,
+    });
+    setClients(prev => [response, ...prev]);
+    return response;
   };
 
   const updateClient = async (id: string, updates: Partial<Client>) => {
-    setClients(prev => prev.map(c => 
-      c.id === id 
-        ? { ...c, ...updates, updated_at: new Date().toISOString() }
-        : c
-    ));
+    const response = await apiClient.patch<Client>(`/clients/${id}`, updates);
+    setClients(prev => prev.map(c => c.id === id ? response : c));
+    return response;
   };
 
   const deleteClient = async (id: string) => {
+    await apiClient.delete(`/clients/${id}`);
     setClients(prev => prev.filter(c => c.id !== id));
   };
 
@@ -157,5 +97,6 @@ export function useClients() {
     deleteClient,
     getClient,
     stats,
+    refetch: fetchClients,
   };
 }

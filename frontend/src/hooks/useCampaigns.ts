@@ -1,97 +1,71 @@
-import { useState, useEffect } from 'react';
-import { Campaign } from '@/types/database';
+'use client';
 
-const mockCampaigns: Campaign[] = [
-  {
-    id: "c1",
-    business_id: "b1",
-    name: "Promoción Marzo 2024",
-    template_id: "t1",
-    segment_tags: ["VIP", "Cliente Frecuente"],
-    status: "sent",
-    scheduled_at: "2024-03-15T10:00:00Z",
-    sent_count: 45,
-    created_at: "2024-03-10T09:00:00Z",
-  },
-  {
-    id: "c2",
-    business_id: "b1",
-    name: "Recordatorio de Pago",
-    template_id: "t2",
-    segment_tags: ["Moroso"],
-    status: "sent",
-    scheduled_at: "2024-03-20T09:00:00Z",
-    sent_count: 12,
-    created_at: "2024-03-18T14:00:00Z",
-  },
-  {
-    id: "c3",
-    business_id: "b1",
-    name: "Nuevo Producto Disponible",
-    template_id: "t1",
-    segment_tags: [],
-    status: "draft",
-    scheduled_at: null,
-    sent_count: 0,
-    created_at: "2024-03-25T11:00:00Z",
-  },
-];
+import { useState, useEffect, useCallback } from 'react';
+import { Campaign } from '@/types/database';
+import { apiClient, ApiError } from '@/lib/api/client';
+import { useBusiness } from '@/contexts/BusinessContext';
 
 export type CampaignFormData = {
   name: string;
   template_id: string;
   segment_tags: string[];
   scheduled_at: string | null;
-  business_id?: string;
 };
 
 export function useCampaigns() {
+  const { businessId } = useBusiness();
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchCampaigns = async () => {
-      setLoading(true);
-      try {
-        await new Promise(resolve => setTimeout(resolve, 500));
-        setCampaigns(mockCampaigns);
-        setError(null);
-      } catch (err) {
-        setError('Error al cargar campañas');
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchCampaigns = useCallback(async () => {
+    if (!businessId) {
+      setCampaigns([]);
+      setLoading(false);
+      return;
+    }
 
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await apiClient.get<Campaign[]>('/campaigns', {
+        params: { business_id: businessId },
+      });
+      setCampaigns(response || []);
+    } catch (err) {
+      if (err instanceof ApiError) {
+        setError(err.message);
+      } else {
+        setError('Error al cargar campañas');
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, [businessId]);
+
+  useEffect(() => {
     fetchCampaigns();
-  }, []);
+  }, [fetchCampaigns]);
 
   const addCampaign = async (campaignData: CampaignFormData) => {
-    const newCampaign: Campaign = {
-      id: crypto.randomUUID(),
-      business_id: campaignData.business_id || "b1",
-      name: campaignData.name,
-      template_id: campaignData.template_id,
-      segment_tags: campaignData.segment_tags,
-      scheduled_at: campaignData.scheduled_at,
-      status: 'draft',
-      sent_count: 0,
-      created_at: new Date().toISOString(),
-    };
-    setCampaigns(prev => [newCampaign, ...prev]);
-    return newCampaign;
+    if (!businessId) throw new Error('No business selected');
+
+    const response = await apiClient.post<Campaign>('/campaigns', {
+      ...campaignData,
+      business_id: businessId,
+    });
+    setCampaigns(prev => [response, ...prev]);
+    return response;
   };
 
   const sendCampaign = async (id: string) => {
-    setCampaigns(prev => prev.map(c => 
-      c.id === id 
-        ? { ...c, status: 'sent', sent_at: new Date().toISOString() }
-        : c
-    ));
+    const response = await apiClient.post<Campaign>(`/campaigns/${id}/send`);
+    setCampaigns(prev => prev.map(c => c.id === id ? response : c));
+    return response;
   };
 
   const deleteCampaign = async (id: string) => {
+    await apiClient.delete(`/campaigns/${id}`);
     setCampaigns(prev => prev.filter(c => c.id !== id));
   };
 
@@ -111,5 +85,6 @@ export function useCampaigns() {
     sendCampaign,
     deleteCampaign,
     stats,
+    refetch: fetchCampaigns,
   };
 }

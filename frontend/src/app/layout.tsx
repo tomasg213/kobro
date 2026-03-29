@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { BusinessProvider } from "@/contexts/BusinessContext";
 
 export const metadata: Metadata = {
   title: "Kobro - WhatsApp B2B Platform",
@@ -13,7 +14,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es">
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        <BusinessProvider>{children}</BusinessProvider>
+      </body>
     </html>
   );
 }
