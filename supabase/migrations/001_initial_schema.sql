@@ -195,32 +195,39 @@ ALTER TABLE public.messages_log ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.payment_reminders ENABLE ROW LEVEL SECURITY;
 
 -- Profiles: Users can read/update their own profile
+DROP POLICY IF EXISTS "Users can view own profile" ON public.profiles;
 CREATE POLICY "Users can view own profile"
     ON public.profiles FOR SELECT
     USING (auth.uid() = id);
 
+DROP POLICY IF EXISTS "Users can update own profile" ON public.profiles;
 CREATE POLICY "Users can update own profile"
     ON public.profiles FOR UPDATE
     USING (auth.uid() = id);
 
 -- Clients: Users can only access their business data
+DROP POLICY IF EXISTS "Users can view clients of their business" ON public.clients;
 CREATE POLICY "Users can view clients of their business"
     ON public.clients FOR SELECT
     USING (auth.uid() = business_id);
 
+DROP POLICY IF EXISTS "Users can insert clients for their business" ON public.clients;
 CREATE POLICY "Users can insert clients for their business"
     ON public.clients FOR INSERT
     WITH CHECK (auth.uid() = business_id);
 
+DROP POLICY IF EXISTS "Users can update clients of their business" ON public.clients;
 CREATE POLICY "Users can update clients of their business"
     ON public.clients FOR UPDATE
     USING (auth.uid() = business_id);
 
+DROP POLICY IF EXISTS "Users can delete clients of their business" ON public.clients;
 CREATE POLICY "Users can delete clients of their business"
     ON public.clients FOR DELETE
     USING (auth.uid() = business_id);
 
 -- Transactions: Users can access transactions of their clients
+DROP POLICY IF EXISTS "Users can view transactions of their clients" ON public.transactions;
 CREATE POLICY "Users can view transactions of their clients"
     ON public.transactions FOR SELECT
     USING (
@@ -231,6 +238,7 @@ CREATE POLICY "Users can view transactions of their clients"
         )
     );
 
+DROP POLICY IF EXISTS "Users can insert transactions for their clients" ON public.transactions;
 CREATE POLICY "Users can insert transactions for their clients"
     ON public.transactions FOR INSERT
     WITH CHECK (
@@ -241,6 +249,7 @@ CREATE POLICY "Users can insert transactions for their clients"
         )
     );
 
+DROP POLICY IF EXISTS "Users can update transactions of their clients" ON public.transactions;
 CREATE POLICY "Users can update transactions of their clients"
     ON public.transactions FOR UPDATE
     USING (
@@ -252,36 +261,44 @@ CREATE POLICY "Users can update transactions of their clients"
     );
 
 -- Message Templates
+DROP POLICY IF EXISTS "Users can view templates of their business" ON public.message_templates;
 CREATE POLICY "Users can view templates of their business"
     ON public.message_templates FOR SELECT
     USING (auth.uid() = business_id);
 
+DROP POLICY IF EXISTS "Users can insert templates for their business" ON public.message_templates;
 CREATE POLICY "Users can insert templates for their business"
     ON public.message_templates FOR INSERT
     WITH CHECK (auth.uid() = business_id);
 
+DROP POLICY IF EXISTS "Users can update templates of their business" ON public.message_templates;
 CREATE POLICY "Users can update templates of their business"
     ON public.message_templates FOR UPDATE
     USING (auth.uid() = business_id);
 
+DROP POLICY IF EXISTS "Users can delete templates of their business" ON public.message_templates;
 CREATE POLICY "Users can delete templates of their business"
     ON public.message_templates FOR DELETE
     USING (auth.uid() = business_id);
 
 -- Campaigns
+DROP POLICY IF EXISTS "Users can view campaigns of their business" ON public.campaigns;
 CREATE POLICY "Users can view campaigns of their business"
     ON public.campaigns FOR SELECT
     USING (auth.uid() = business_id);
 
+DROP POLICY IF EXISTS "Users can insert campaigns for their business" ON public.campaigns;
 CREATE POLICY "Users can insert campaigns for their business"
     ON public.campaigns FOR INSERT
     WITH CHECK (auth.uid() = business_id);
 
+DROP POLICY IF EXISTS "Users can update campaigns of their business" ON public.campaigns;
 CREATE POLICY "Users can update campaigns of their business"
     ON public.campaigns FOR UPDATE
     USING (auth.uid() = business_id);
 
 -- Messages Log
+DROP POLICY IF EXISTS "Users can view messages of their clients" ON public.messages_log;
 CREATE POLICY "Users can view messages of their clients"
     ON public.messages_log FOR SELECT
     USING (
@@ -293,15 +310,18 @@ CREATE POLICY "Users can view messages of their clients"
         )
     );
 
+DROP POLICY IF EXISTS "Service role can insert messages" ON public.messages_log;
 CREATE POLICY "Service role can insert messages"
     ON public.messages_log FOR INSERT
     WITH CHECK (true);
 
 -- Payment Reminders
+DROP POLICY IF EXISTS "Users can view reminders of their business" ON public.payment_reminders;
 CREATE POLICY "Users can view reminders of their business"
     ON public.payment_reminders FOR SELECT
     USING (auth.uid() = business_id);
 
+DROP POLICY IF EXISTS "Users can manage reminders of their business" ON public.payment_reminders;
 CREATE POLICY "Users can manage reminders of their business"
     ON public.payment_reminders FOR ALL
     USING (auth.uid() = business_id);
@@ -320,26 +340,32 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Apply updated_at triggers
+DROP TRIGGER IF EXISTS update_profiles_updated_at ON public.profiles;
 CREATE TRIGGER update_profiles_updated_at
     BEFORE UPDATE ON public.profiles
     FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
 
+DROP TRIGGER IF EXISTS update_clients_updated_at ON public.clients;
 CREATE TRIGGER update_clients_updated_at
     BEFORE UPDATE ON public.clients
     FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
 
+DROP TRIGGER IF EXISTS update_transactions_updated_at ON public.transactions;
 CREATE TRIGGER update_transactions_updated_at
     BEFORE UPDATE ON public.transactions
     FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
 
+DROP TRIGGER IF EXISTS update_templates_updated_at ON public.message_templates;
 CREATE TRIGGER update_templates_updated_at
     BEFORE UPDATE ON public.message_templates
     FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
 
+DROP TRIGGER IF EXISTS update_campaigns_updated_at ON public.campaigns;
 CREATE TRIGGER update_campaigns_updated_at
     BEFORE UPDATE ON public.campaigns
     FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
 
+DROP TRIGGER IF EXISTS update_reminders_updated_at ON public.payment_reminders;
 CREATE TRIGGER update_reminders_updated_at
     BEFORE UPDATE ON public.payment_reminders
     FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
