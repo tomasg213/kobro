@@ -10,11 +10,15 @@ logger = logging.getLogger(__name__)
 
 
 @router.get("/whatsapp")
-async def verify_webhook(
-    hub_mode: str = Query(...),
-    hub_verify_token: str = Query(...),
-    hub_challenge: str = Query(...)
-):
+async def verify_webhook(request: Request):
+    params = dict(request.query_params)
+    
+    hub_mode = params.get("hub.mode")
+    hub_verify_token = params.get("hub.verify_token")
+    hub_challenge = params.get("hub.challenge")
+    
+    logger.info(f"Webhook verification attempt: mode={hub_mode}, token={hub_verify_token[:10] if hub_verify_token else None}...")
+    
     if hub_mode == "subscribe" and hub_verify_token == settings.WHATSAPP_WEBHOOK_VERIFY_TOKEN:
         logger.info("WhatsApp webhook verified successfully")
         return int(hub_challenge)
